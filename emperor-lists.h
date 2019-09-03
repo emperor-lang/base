@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct emperorListNode
+{
+	void* value;
+	struct emperorListNode* succ;
+	struct emperorListNode* prev;
+} emperorListNode_t;
+
+typedef struct emperorList
+{
+	int length;
+	emperorListNode_t* first;
+	emperorListNode_t* last;
+} emperorList_t;
+
+emperorList_t* initEmperorList(void);
+void destroyEmperorList(emperorList_t*, void (*)(void*));
+int isEmpty(emperorList_t* lst);
+void* get(emperorList_t*, int);
+emperorList_t* del(emperorList_t*, int);
+emperorList_t* append(emperorList_t*, void*);
+emperorList_t* prepend(emperorList_t*, void*);
+emperorList_t* unite(emperorList_t*, emperorList_t*);
