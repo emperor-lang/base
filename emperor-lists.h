@@ -1,3 +1,6 @@
+#ifndef EMPEROR_LISTS_H_
+#define EMPEROR_LISTS_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,3 +29,5 @@ emperorList_t* del(emperorList_t*, int);
 emperorList_t* append(emperorList_t*, void*);
 emperorList_t* prepend(emperorList_t*, void*);
 emperorList_t* unite(emperorList_t*, emperorList_t*);
+
+#endif /* EMPEROR_LISTS_H_ */
