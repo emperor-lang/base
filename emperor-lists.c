@@ -82,7 +82,7 @@ emperorListNode_t* getNode(emperorList_t* lst, int idx)
 	if (idx > lst->length)
 	{
 		fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length);
-		exit(-1);
+		exit(EXIT_FAILURE);
 	}
 
 	// ~2x speed boost in general, but this is still O(n) ¯\_(ツ)_/¯
@@ -127,7 +127,7 @@ emperorList_t* append(emperorList_t* lst, void* value)
 	if (node == NULL)
 	{
 		fprintf(stderr, "Failed to allocate space when creating list node\n");
-		exit(-1);
+		exit(EXIT_FAILURE);
 	}
 	node->value = value;
 	node->succ  = NULL;
@@ -159,7 +159,7 @@ emperorList_t* prepend(emperorList_t* lst, void* value)
 	if (node == NULL)
 	{
 		fprintf(stderr, "Failed to allocate space when creating list node\n");
-		exit(-1);
+		exit(EXIT_FAILURE);
 	}
 	node->value = value;
 	node->succ  = NULL;
