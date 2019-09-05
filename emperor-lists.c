@@ -1,7 +1,16 @@
 #include "emperor-lists.h"
-#include <stdio.h>
 
-emperorList_t* initEmperorList(void) { return calloc(1, sizeof(emperorList_t*)); }
+emperorList_t* initEmperorList(void)
+{
+	emperorList_t* lst = (emperorList_t*)calloc(1, sizeof(emperorList_t*));
+	if (lst == NULL)
+	{
+		fprintf(stderr, "Could not allocate space for list");
+		exit(EXIT_FAILURE);
+	}
+
+	return lst;
+}
 
 void destroyEmperorList(emperorList_t* lst, void (*elementDestructor)(void*))
 {
@@ -12,6 +21,7 @@ void destroyEmperorList(emperorList_t* lst, void (*elementDestructor)(void*))
 	{
 		next = node->succ;
 		elementDestructor(node->value);
+		free(node->value);
 		free(node);
 		node = next;
 	}
@@ -26,9 +36,12 @@ bool isEmpty(emperorList_t* lst)
 
 void* get(emperorList_t* lst, int idx)
 {
-	printf("asdf\n");
-	printf("%p\n", (void*)lst);
 	emperorListNode_t* n = getNode(lst, idx);
+	if (n == NULL)
+	{
+		fprintf(stderr, "List search returned NULL\n");
+		exit(EXIT_FAILURE);
+	}
 	return n->value;
 }
 
