@@ -77,8 +77,6 @@ emperorList_t* del(emperorList_t* lst, int idx)
 // Precondition: lst != NULL
 emperorListNode_t* getNode(emperorList_t* lst, int idx)
 {
-	printf("Getting %d from list\n", idx);
-
 	if (idx > lst->length)
 	{
 		fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length);
@@ -95,11 +93,9 @@ emperorListNode_t* getNode(emperorList_t* lst, int idx)
 // Precondition: lst != NULL && idx <= lst->length
 emperorListNode_t* getFromFront(emperorList_t* lst, int idx)
 {
-	printf("Getting from the front...\n");
 	emperorListNode_t* curr = lst->first;
 	while (idx > 0)
 	{
-		printf("Hop!\n");
 		curr = curr->succ;
 		idx--;
 	}
@@ -113,7 +109,6 @@ emperorListNode_t* getFromBack(emperorList_t* lst, int idx)
 	emperorListNode_t* curr = lst->last;
 	while (idx > 0)
 	{
-		printf("Hop!\n");
 		curr = curr->prev;
 		idx--;
 	}
