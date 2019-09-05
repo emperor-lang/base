@@ -3,19 +3,20 @@
 .DEFAULT_GOAL := all
 
 CC := gcc-8
-CFLAGS := -Wall -Wextra -Wpedantic -Werror -pedantic-errors -c -O3
+CFLAGS := -Wall -Wextra -Wpedantic -Werror -pedantic-errors -c -O3 -g
 AR := ar
 ARFLAGS := -rcs
 
-all: libbase.a emperor-lists.h
+all: libbase.a base.h
 .PHONY: all
 
-libbase.a: emperor-lists.o
+libbase.a: emperor-lists.o ./versioned-pointers.o ./base-io.o
 	$(AR) $(ARFLAGS) $@ $^
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) $< -o $@
 
+base.h:;
 %.h: %.c;
 
 clean:
