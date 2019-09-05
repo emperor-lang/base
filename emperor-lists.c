@@ -19,7 +19,7 @@ void destroyEmperorList(emperorList_t* lst, void (*elementDestructor)(void*))
 	free(lst);
 }
 
-int isEmpty(emperorList_t* lst)
+bool isEmpty(emperorList_t* lst)
 {
 	return lst == NULL || lst->length == 0 || (lst->first == NULL && lst->first == NULL);
 }

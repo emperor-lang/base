@@ -1,6 +1,7 @@
 #ifndef EMPEROR_LISTS_H_
 #define EMPEROR_LISTS_H_
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -20,7 +21,7 @@ typedef struct emperorList
 
 emperorList_t* initEmperorList(void);
 void destroyEmperorList(emperorList_t*, void (*)(void*));
-int isEmpty(emperorList_t* lst);
+bool isEmpty(emperorList_t* lst);
 void* get(emperorList_t*, int);
 emperorListNode_t* getNode(emperorList_t*, int);
 emperorListNode_t* getFromFront(emperorList_t*, int);
