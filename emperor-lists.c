@@ -1,8 +1,8 @@
 #include "emperor-lists.h"
 
-emperorList_t* initEmperorList(void)
+base_EmperorList_t* base_initEmperorList(void)
 {
-	emperorList_t* lst = (emperorList_t*)calloc(1, sizeof(emperorList_t*));
+	base_EmperorList_t* lst = (base_EmperorList_t*)calloc(1, sizeof(base_EmperorList_t*));
 	if (lst == NULL)
 	{
 		fprintf(stderr, "Could not allocate space for list");
@@ -12,10 +12,10 @@ emperorList_t* initEmperorList(void)
 	return lst;
 }
 
-void destroyEmperorList(emperorList_t* lst, void (*elementDestructor)(any_t))
+void base_destroyEmperorList(base_EmperorList_t* lst, void (*elementDestructor)(base_Any_t))
 {
-	emperorListNode_t* node = lst->first;
-	emperorListNode_t* next;
+	base_EmperorListNode_t* node = lst->first;
+	base_EmperorListNode_t* next;
 
 	while (node != NULL)
 	{
@@ -28,14 +28,14 @@ void destroyEmperorList(emperorList_t* lst, void (*elementDestructor)(any_t))
 	free(lst);
 }
 
-bool isEmpty(emperorList_t* lst)
+bool base_isEmpty(base_EmperorList_t* lst)
 {
 	return lst == NULL || lst->length == 0 || (lst->first == NULL && lst->first == NULL);
 }
 
-emperorList_t* del(emperorList_t* lst, int idx)
+base_EmperorList_t* base_del(base_EmperorList_t* lst, int idx)
 {
-	emperorListNode_t* node = getNode(lst, idx);
+	base_EmperorListNode_t* node = getNode(lst, idx);
 
 	if (node->prev == NULL)
 	{
@@ -62,9 +62,9 @@ emperorList_t* del(emperorList_t* lst, int idx)
 	return lst;
 }
 
-any_t get(emperorList_t* lst, int idx)
+base_Any_t base_get(base_EmperorList_t* lst, int idx)
 {
-	emperorListNode_t* n = getNode(lst, idx);
+	base_EmperorListNode_t* n = getNode(lst, idx);
 	if (n == NULL)
 	{
 		fprintf(stderr, "List search returned NULL\n");
@@ -74,7 +74,7 @@ any_t get(emperorList_t* lst, int idx)
 }
 
 // Precondition: lst != NULL
-emperorListNode_t* getNode(emperorList_t* lst, int idx)
+base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx)
 {
 	if (idx > lst->length)
 	{
@@ -90,9 +90,9 @@ emperorListNode_t* getNode(emperorList_t* lst, int idx)
 }
 
 // Precondition: lst != NULL && idx <= lst->length
-emperorListNode_t* getFromFront(emperorList_t* lst, int idx)
+base_EmperorListNode_t* getFromFront(base_EmperorList_t* lst, int idx)
 {
-	emperorListNode_t* curr = lst->first;
+	base_EmperorListNode_t* curr = lst->first;
 	while (idx > 0)
 	{
 		curr = curr->succ;
@@ -102,10 +102,10 @@ emperorListNode_t* getFromFront(emperorList_t* lst, int idx)
 }
 
 // Precondition: lst != NULL && lst->length/2 <= idx <= lst->length
-emperorListNode_t* getFromBack(emperorList_t* lst, int idx)
+base_EmperorListNode_t* getFromBack(base_EmperorList_t* lst, int idx)
 {
-	idx                     = lst->length - idx;
-	emperorListNode_t* curr = lst->last;
+	idx                          = lst->length - idx;
+	base_EmperorListNode_t* curr = lst->last;
 	while (idx > 0)
 	{
 		curr = curr->prev;
@@ -115,9 +115,9 @@ emperorListNode_t* getFromBack(emperorList_t* lst, int idx)
 }
 
 // Precondition: lst != NULL
-emperorList_t* append(emperorList_t* lst, any_t value)
+base_EmperorList_t* base_append(base_EmperorList_t* lst, base_Any_t value)
 {
-	emperorListNode_t* node = (emperorListNode_t*)malloc(sizeof(emperorListNode_t));
+	base_EmperorListNode_t* node = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
 	if (node == NULL)
 	{
 		fprintf(stderr, "Failed to allocate space when creating list node\n");
@@ -147,9 +147,9 @@ emperorList_t* append(emperorList_t* lst, any_t value)
 }
 
 // Precondition: lst != NULL
-emperorList_t* prepend(emperorList_t* lst, any_t value)
+base_EmperorList_t* base_prepend(base_EmperorList_t* lst, base_Any_t value)
 {
-	emperorListNode_t* node = (emperorListNode_t*)malloc(sizeof(emperorListNode_t));
+	base_EmperorListNode_t* node = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
 	if (node == NULL)
 	{
 		fprintf(stderr, "Failed to allocate space when creating list node\n");
@@ -176,12 +176,12 @@ emperorList_t* prepend(emperorList_t* lst, any_t value)
 	return lst;
 }
 
-emperorList_t* unite(emperorList_t* lst1, emperorList_t* lst2)
+base_EmperorList_t* base_unite(base_EmperorList_t* lst1, base_EmperorList_t* lst2)
 {
 	// Handle cases where list is empty
-	if (isEmpty(lst1))
+	if (base_isEmpty(lst1))
 		return lst1;
-	else if (isEmpty(lst2))
+	else if (base_isEmpty(lst2))
 		return lst1;
 
 	lst1->last->succ  = lst2->first;
@@ -192,11 +192,11 @@ emperorList_t* unite(emperorList_t* lst1, emperorList_t* lst2)
 	return lst1;
 }
 
-emperorList_t* stringToCharList(char* str) { return stringToCharListL(str, strlen(str)); }
+base_EmperorList_t* base_stringToCharList(char* str) { return base_stringToCharListL(str, strlen(str)); }
 
-emperorList_t* stringToCharListL(char* str, size_t length)
+base_EmperorList_t* base_stringToCharListL(char* str, size_t length)
 {
-	emperorList_t* toReturn = (emperorList_t*)malloc(sizeof(emperorList_t));
+	base_EmperorList_t* toReturn = (base_EmperorList_t*)malloc(sizeof(base_EmperorList_t));
 	if (toReturn == NULL)
 	{
 		fprintf(stderr, "Could not allocate memory for list\n");
@@ -205,19 +205,19 @@ emperorList_t* stringToCharListL(char* str, size_t length)
 
 	for (size_t i = 0; i < length; i++)
 	{
-		any_t x = (any_t){ .charV = str[i] };
-		append(toReturn, x);
+		base_Any_t x = (base_Any_t){ .charV = str[i] };
+		base_append(toReturn, x);
 	}
 
 	return toReturn;
 }
 
-char* charListToString(emperorList_t* lst)
+char* base_charListToString(base_EmperorList_t* lst)
 {
 	int len   = lst->length;
 	char* buf = (char*)malloc(len * sizeof(char) + 1);
 
-	emperorListNode_t* curr = lst->first;
+	base_EmperorListNode_t* curr = lst->first;
 	for (int i = 0; i < len && curr != NULL; i++, curr = curr->succ)
 	{
 		buf[i] = curr->value.charV;

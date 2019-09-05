@@ -3,13 +3,13 @@
 
 #include <stdbool.h>
 
-typedef struct any
+typedef struct base_any
 {
 	int intV;
 	char charV;
 	bool boolV;
 	double doubleV;
 	void* voidV;
-} any_t;
+} base_Any_t;
 
 #endif /* GENERICS_H_ */

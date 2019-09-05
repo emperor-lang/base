@@ -3,12 +3,12 @@
 
 #include "generics.h"
 
-typedef struct versionedPointer
+typedef struct base_versionedPointer
 {
-	any_t value;
+	base_Any_t value;
 	long int idx;
-} versionedPointer_t;
+} base_VersionedPointer_t;
 
-void* getValue(versionedPointer_t, int);
+void* base_getValue(base_VersionedPointer_t, int);
 
 #endif /* VERSIONED_POINTERS_H_ */
