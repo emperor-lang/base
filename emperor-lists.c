@@ -86,10 +86,10 @@ emperorListNode_t* getNode(emperorList_t* lst, int idx)
 	}
 
 	// ~2x speed boost in general, but this is still O(n) ¯\_(ツ)_/¯
-	if (idx <= lst->length >> 1)
-		return getFromFront(lst, idx)->value;
+	if (idx <= lst->length / 2)
+		return getFromFront(lst, idx);
 	else
-		return getFromBack(lst, idx)->value;
+		return getFromBack(lst, idx);
 }
 
 // Precondition: lst != NULL && idx <= lst->length
@@ -106,10 +106,10 @@ emperorListNode_t* getFromFront(emperorList_t* lst, int idx)
 	return curr;
 }
 
-// Precondition: lst != NULL && idx <= lst->length
+// Precondition: lst != NULL && lst->length/2 <= idx <= lst->length
 emperorListNode_t* getFromBack(emperorList_t* lst, int idx)
 {
-	printf("Getting from the back...\n");
+	idx                     = lst->length - idx;
 	emperorListNode_t* curr = lst->last;
 	while (idx > 0)
 	{
@@ -193,6 +193,7 @@ emperorList_t* unite(emperorList_t* lst1, emperorList_t* lst2)
 	lst1->last->succ  = lst2->first;
 	lst2->first->prev = lst1->last;
 	lst1->length += lst2->length;
+	lst1->last = lst2->last;
 
 	return lst1;
 }
