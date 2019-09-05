@@ -1,0 +1,4 @@
+#ifndef VERSIONED_POINTERS_H_
+#define VERSIONED_POINTERS_H_
+
+#endif /* VERSIONED_POINTERS_H_ */
