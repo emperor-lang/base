@@ -3,6 +3,7 @@
 
 #include "base-io.h"
 #include "emperor-lists.h"
+#include "generics.h"
 #include "versioned-pointers.h"
 
 #endif /* BASE_H_ */

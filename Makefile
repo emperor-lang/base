@@ -10,7 +10,7 @@ ARFLAGS := -rcs
 all: libbase.a base.h
 .PHONY: all
 
-libbase.a: emperor-lists.o ./versioned-pointers.o ./base-io.o
+libbase.a: emperor-lists.o ./versioned-pointers.o ./base-io.o ./generics.o
 	$(AR) $(ARFLAGS) $@ $^
 
 %.o: %.c %.h
