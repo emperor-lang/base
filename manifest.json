@@ -9,7 +9,7 @@
 	"version": "0.0.1",
 	"files": [
 		"libbase.a",
-		"emperor-lists.h"
+		"base.h"
 	],
 	"license": "GPL-3"
 }
