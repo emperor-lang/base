@@ -1,3 +1,13 @@
+/**
+ * @file base-references.c
+ * @author Ed Jones (ed@kcza.net)
+ * @brief Defines functions to handle references
+ * @version 0.1
+ * @date 2019-09-06
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #include "base-references.h"
 
 base_Any_t base_dereference(base_Reference_t rootRef, base_ReferenceContext_t ctx)
