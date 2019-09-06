@@ -1,4 +1,4 @@
-#include "emperor-lists.h"
+#include "base-lists.h"
 
 base_EmperorList_t* base_initEmperorList(void)
 {
@@ -20,7 +20,9 @@ void base_destroyEmperorList(base_EmperorList_t* lst, void (*elementDestructor)(
 	while (node != NULL)
 	{
 		next = node->succ;
+		printf("Freeing node value\n");
 		elementDestructor(node->value);
+		printf("Freeing node\n");
 		free(node);
 		node = next;
 	}
@@ -117,7 +119,9 @@ base_EmperorListNode_t* getFromBack(base_EmperorList_t* lst, int idx)
 // Precondition: lst != NULL
 base_EmperorList_t* base_append(base_EmperorList_t* lst, base_Any_t value)
 {
+	printf("Running base_append(..)\n");
 	base_EmperorListNode_t* node = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
+	printf("A");
 	if (node == NULL)
 	{
 		fprintf(stderr, "Failed to allocate space when creating list node\n");
@@ -126,10 +130,12 @@ base_EmperorList_t* base_append(base_EmperorList_t* lst, base_Any_t value)
 	node->value = value;
 	node->succ  = NULL;
 	node->prev  = NULL;
+	printf("a");
 
 	if (lst->last == NULL)
 	{
 		// The list is empty
+		printf("a");
 		lst->last   = node;
 		lst->first  = node;
 		lst->length = 1;
@@ -137,11 +143,13 @@ base_EmperorList_t* base_append(base_EmperorList_t* lst, base_Any_t value)
 	else
 	{
 		// General case
+		printf("a");
 		lst->last->succ = node;
 		node->prev      = lst->last;
 		lst->last       = node;
 		lst->length++;
 	}
+	printf("X\n");
 
 	return lst;
 }

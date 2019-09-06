@@ -1,7 +1,7 @@
 #ifndef REFERENCES_H_
 #define REFERENCES_H_
 
-#include "generics.h"
+#include "../generics/base-generics.h"
 
 typedef struct base_reference
 {

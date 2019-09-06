@@ -1,7 +1,7 @@
 #ifndef EMPEROR_LISTS_H_
 #define EMPEROR_LISTS_H_
 
-#include "generics.h"
+#include "../generics/base-generics.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

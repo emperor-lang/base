@@ -6,10 +6,19 @@
 		"url": "https://kcza.net"
 	},
 	"dependencies": [],
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"files": [
 		"libbase.a",
-		"base.h"
+		"base.h",
+		"unused/base-unused.h",
+		"io/base-io.h",
+		"OS/base-OS.h",
+		"banned/banned/banned.h",
+		"banned/base-banned.h",
+		"generics/base-generics.h",
+		"base.h",
+		"lists/base-lists.h",
+		"references/base-references.h"
 	],
 	"license": "GPL-3"
 }
