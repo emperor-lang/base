@@ -20,5 +20,5 @@ base.h:;
 %.h: %.c;
 
 clean:
-	$(RM) *.o *.a *.tar *.gz
+	$(RM) **/*.o *.a *.tar *.gz
 .PHONY: clean
