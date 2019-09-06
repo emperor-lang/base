@@ -5,7 +5,7 @@
 CC := gcc-8
 CFLAGS := -Wall -Wextra -Wpedantic -Werror -pedantic-errors -c -O3 -g
 AR := ar
-ARFLAGS := -rcs
+ARFLAGS := -rUucs
 
 all: libbase.a base.h.gch
 .PHONY: all
