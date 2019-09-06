@@ -9,6 +9,6 @@
 #include "references/base-references.h"
 #include "unused/base-unused.h"
 
-// #include "banned/base-banned.h"
+#include "banned/base-banned.h"
 
 #endif /* BASE_H_ */

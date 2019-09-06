@@ -3,6 +3,8 @@
 
 #define _SDL_BANNED_RECOMMENDED
 
+#undef alloca
+
 #include "./banned/banned.h"
 
 #endif
