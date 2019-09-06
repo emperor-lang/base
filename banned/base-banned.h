@@ -1,5 +1,5 @@
-#ifndef _BANNED_H_
-#define _BANNED_H_
+#ifndef BASE_BANNED_H_
+#define BASE_BANNED_H_
 
 #define _SDL_BANNED_RECOMMENDED
 
@@ -7,4 +7,4 @@
 
 #include "./banned/banned.h"
 
-#endif
+#endif /* BASE_BANNED_H_ */

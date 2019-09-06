@@ -1,3 +1,6 @@
+#ifndef BASE_OS_H_
+#define BASE_OS_H_
+
 #ifdef _WIN64
 #	error "64-bit Windows is not supported"
 #elif _WIN32
@@ -16,3 +19,5 @@
 #	error "Could not detect operating system, what are you running? If you are running something other people use, \
 please file this as a bug report at <https://github.com/emperor-lang/emperor/issues>"
 #endif
+
+#endif /* BASE_OS_H_ */

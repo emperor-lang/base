@@ -1,5 +1,5 @@
-#ifndef GENERICS_H_
-#define GENERICS_H_
+#ifndef BASE_GENERICS_H_
+#define BASE_GENERICS_H_
 
 #include <stdbool.h>
 
@@ -12,4 +12,4 @@ typedef struct base_any
 	void* voidV;
 } base_Any_t;
 
-#endif /* GENERICS_H_ */
+#endif /* BASE_GENERICS_H_ */

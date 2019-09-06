@@ -1,5 +1,5 @@
-#ifndef EMPEROR_LISTS_H_
-#define EMPEROR_LISTS_H_
+#ifndef BASE_LISTS_H_
+#define BASE_LISTS_H_
 
 #include "../generics/base-generics.h"
 #include <stdbool.h>
@@ -37,4 +37,4 @@ base_EmperorList_t* base_stringToCharList(char*);
 base_EmperorList_t* base_stringToCharListL(char* str, size_t length);
 char* base_charListToString(base_EmperorList_t*);
 
-#endif /* EMPEROR_LISTS_H_ */
+#endif /* BASE_LISTS_H_ */

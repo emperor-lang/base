@@ -1,5 +1,5 @@
-#ifndef REFERENCES_H_
-#define REFERENCES_H_
+#ifndef BASE_REFERENCES_H_
+#define BASE_REFERENCES_H_
 
 #include "../generics/base-generics.h"
 
@@ -11,4 +11,4 @@ typedef struct base_reference
 
 void* base_getValue(base_Reference_t, int);
 
-#endif /* REFERENCES_H_ */
+#endif /* BASE_REFERENCES_H_ */
