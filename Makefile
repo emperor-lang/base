@@ -7,6 +7,9 @@ CFLAGS := -Wall -Wextra -Wpedantic -Werror -pedantic-errors -c -O3 -g
 AR := ar
 ARFLAGS := -rUucs
 
+ALL_SOURCE_FILES = $(shell find . -name '*.[ch]')
+BASE_SOURCE_FILES = $(shell find . -name '*.[ch]' | grep -v banned/)
+
 all: libbase.a base.h.gch
 .PHONY: all
 
@@ -23,14 +26,14 @@ base.h.gch: ./base.h
 
 %.h: %.c;
 
-lint: $(shell find . -name '*.[ch]')
+lint: $(BASE_SOURCE_FILES)
 	splint $^
 .PHONY: lint
 
 doc: ./doc/html/index.html
 .PHONY: doc
 
-./doc/html/index.html: $(shell find . -name '*.[ch]') ./doxygen.conf
+./doc/html/index.html: $(ALL_SOURCE_FILES) ./doxygen.conf
 	doxygen ./doxygen/doxygen.conf
 
 %.conf:;
@@ -38,7 +41,7 @@ doc: ./doc/html/index.html
 ./doc/:
 	mkdir $@
 
-format: $(shell find . -name '*.[ch]' | grep -v banned/)
+format: $(BASE_SOURCE_FILES)
 	clang-format -style=file -i $^
 
 clean:
