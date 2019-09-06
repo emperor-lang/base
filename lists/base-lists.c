@@ -1,3 +1,13 @@
+/**
+ * @file base-lists.c
+ * @author Ed Jones (ed@kcza.net)
+ * @brief Defines functions to create, handle and destroy lists
+ * @version 0.1
+ * @date 2019-09-06
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #include "base-lists.h"
 
 base_EmperorList_t* base_initEmperorList(void)
