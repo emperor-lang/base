@@ -23,15 +23,15 @@
  * in which it appears.
  *
  */
-typedef const long int base_ReferenceIndex_t;
+typedef long int base_ReferenceIndex_t;
 
 /**
  * @brief Stores context parent and identifier
  */
 typedef struct base_referenceContext
 {
-	base_ReferenceIndex_t idx;
-	struct base_referenceContext* parent;
+	const base_ReferenceIndex_t idx;
+	const struct base_referenceContext* parent;
 } base_ReferenceContext_t;
 
 /**
@@ -40,9 +40,9 @@ typedef struct base_referenceContext
 typedef struct base_reference
 {
 	base_Any_t value;
-	base_ReferenceIndex_t idx;
-	struct base_reference* leftChild;
-	struct base_reference* rightChild;
+	const base_ReferenceIndex_t idx;
+	const struct base_reference* leftChild;
+	const struct base_reference* rightChild;
 	bool canBeFreed;
 } base_Reference_t;
 
@@ -54,7 +54,7 @@ typedef struct base_reference
  * @param ctx The required context
  * @return base_Any_t The value of the reference in the given context
  */
-base_Any_t base_dereference(base_Reference_t ref, base_ReferenceContext_t ctx);
+base_Any_t base_dereference(const base_Reference_t ref, const base_ReferenceContext_t ctx);
 
 /**
  * @brief Search a reference for a value in the context exactly specified by idx
@@ -64,15 +64,15 @@ base_Any_t base_dereference(base_Reference_t ref, base_ReferenceContext_t ctx);
  * @return base_Any_t* A pointer to the value, or *NULL* if the required context is absent from the context tree (i.e.
  * 		   			   it makes no change)
  */
-static base_Any_t* getReferenceValueByIndex(base_Reference_t* ref, base_ReferenceIndex_t idx);
+static base_Any_t* getReferenceValueByIndex(const base_Reference_t* ref, base_ReferenceIndex_t idx);
 
 /**
  * @brief Make a new context as a child of a specified one
  *
  * @param ctx The parent of the new context
- * @return base_ReferenceContext_t* Pointer to the new context
+ * @return const base_ReferenceContext_t* Pointer to the new context
  */
-base_ReferenceContext_t* base_makeNewContext(base_ReferenceContext_t* ctx);
+base_ReferenceContext_t base_makeNewContext(const base_ReferenceContext_t ctx);
 
 /**
  * @brief Make new reference in a specified context with a given value
@@ -81,7 +81,7 @@ base_ReferenceContext_t* base_makeNewContext(base_ReferenceContext_t* ctx);
  * @param value The value of the new reference
  * @return base_Reference_t The new reference
  */
-base_Reference_t base_makeNewReference(base_ReferenceContext_t ctx, base_Any_t value);
+base_Reference_t base_makeNewReference(const base_ReferenceContext_t ctx, base_Any_t value);
 
 /**
  * @brief Create a change to a given reference in a given context
@@ -90,6 +90,6 @@ base_Reference_t base_makeNewReference(base_ReferenceContext_t ctx, base_Any_t v
  * @param ctx The context of the new change
  * @param value The value of the new change
  */
-void base_authorReferenceChange(base_Reference_t ref, base_ReferenceContext_t ctx, base_Any_t value);
+void base_authorReferenceChange(const base_Reference_t ref, const base_ReferenceContext_t ctx, base_Any_t value);
 
 #endif /* BASE_REFERENCES_H_ */

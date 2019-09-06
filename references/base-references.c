@@ -4,16 +4,16 @@
  * @brief Defines functions to handle references
  * @version 0.1
  * @date 2019-09-06
- * 
+ *
  * @copyright Copyright (c) 2019
- * 
+ *
  */
 #include "base-references.h"
 
-base_Any_t base_dereference(base_Reference_t rootRef, base_ReferenceContext_t ctx)
+base_Any_t base_dereference(const base_Reference_t rootRef, const base_ReferenceContext_t ctx)
 {
 	base_Any_t* toReturn             = NULL;
-	base_ReferenceContext_t* currCtx = &ctx;
+	base_ReferenceContext_t* currCtx = (base_ReferenceContext_t*)&ctx;
 
 	// Walk up the contexts until a change is seen
 	while (true)
@@ -26,14 +26,14 @@ base_Any_t base_dereference(base_Reference_t rootRef, base_ReferenceContext_t ct
 		}
 		else
 		{
-			currCtx = currCtx->parent;
+			currCtx = (base_ReferenceContext_t*)currCtx->parent;
 		}
 	}
 
 	return *toReturn;
 }
 
-base_Any_t* getReferenceValueByIndex(base_Reference_t* ref, base_ReferenceIndex_t idx)
+static base_Any_t* getReferenceValueByIndex(const base_Reference_t* ref, const base_ReferenceIndex_t idx)
 {
 	// Walk down the reference tree
 	while (ref != NULL)
@@ -48,17 +48,14 @@ base_Any_t* getReferenceValueByIndex(base_Reference_t* ref, base_ReferenceIndex_
 		}
 		else // ref.idxNode == idx
 		{
-			return &ref->value;
+			return (base_Any_t*)&ref->value;
 		}
 	}
 	return NULL;
 }
 
-base_ReferenceContext_t* base_makeNewContext(base_ReferenceContext_t* parent)
+base_ReferenceContext_t base_makeNewContext(const base_ReferenceContext_t parent)
 {
-	base_ReferenceContext_t* toReturn = (base_ReferenceContext_t*)malloc(sizeof(base_ReferenceContext_t));
-	toReturn->parent                  = parent;
-
 	// Generate the index of the new context;
 	// Thanks, Uli Schlachter! https://stackoverflow.com/questions/3665257/generate-random-long-number
 	base_ReferenceIndex_t idx = 0x0;
@@ -67,33 +64,26 @@ base_ReferenceContext_t* base_makeNewContext(base_ReferenceContext_t* parent)
 		idx = (idx << (sizeof(int) * 8)) | rand();
 	}
 
-	toReturn->idx = idx;
-
-	return toReturn;
+	return (base_ReferenceContext_t){ .parent = &parent, .idx = idx };
 }
 
-base_Reference_t base_makeNewReference(base_ReferenceContext_t ctx, base_Any_t value)
+base_Reference_t base_makeNewReference(const base_ReferenceContext_t ctx, const base_Any_t value)
 {
-	base_Reference_t ref;
-	ref.canBeFreed = false;
-	ref.leftChild  = NULL;
-	ref.rightChild = NULL;
-	ref.value      = value;
-	ref.idx        = ctx.idx;
-	return ref;
+	return (
+	    base_Reference_t){ .canBeFreed = false, .leftChild = NULL, .rightChild = NULL, .value = value, .idx = ctx.idx };
 }
 
-void base_authorReferenceChange(base_Reference_t ref, base_ReferenceContext_t ctx, base_Any_t value)
+void base_authorReferenceChange(const base_Reference_t ref, const base_ReferenceContext_t ctx, const base_Any_t value)
 {
 	base_ReferenceIndex_t idx = ctx.idx;
-	base_Reference_t* currRef = &ref;
+	base_Reference_t* currRef = (base_Reference_t*)&ref;
 	base_Reference_t* nextRef = NULL;
 
 	while (true)
 	{
 		if (currRef->idx < idx)
 		{
-			nextRef = currRef->leftChild;
+			nextRef = (base_Reference_t*)currRef->leftChild;
 			if (nextRef == NULL)
 			{
 				base_Reference_t newRef = base_makeNewReference(ctx, value);
@@ -104,7 +94,7 @@ void base_authorReferenceChange(base_Reference_t ref, base_ReferenceContext_t ct
 		}
 		else if (currRef->idx > idx)
 		{
-			nextRef = currRef->rightChild;
+			nextRef = (base_Reference_t*)currRef->rightChild;
 			if (nextRef == NULL)
 			{
 				base_Reference_t newRef = base_makeNewReference(ctx, value);
