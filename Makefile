@@ -38,6 +38,9 @@ doc: ./doc/html/index.html
 ./doc/:
 	mkdir $@
 
+format: $(shell find . -name '*.[ch]' | grep -v banned/)
+	clang-format -style=file -i $^
+
 clean:
 	$(RM) **/*.o *.a *.tar *.gz *.gch
 	$(RM) -r ./doc/
