@@ -23,6 +23,22 @@ base.h.gch: ./base.h
 
 %.h: %.c;
 
+lint: $(shell find . -name '*.[ch]')
+	splint $^
+.PHONY: lint
+
+doc: ./doc/html/index.html
+.PHONY: doc
+
+./doc/html/index.html: $(shell find . -name '*.[ch]') ./doxygen.conf
+	doxygen ./doxygen/doxygen.conf
+
+%.conf:;
+
+./doc/:
+	mkdir $@
+
 clean:
 	$(RM) **/*.o *.a *.tar *.gz *.gch
+	$(RM) -r ./doc/
 .PHONY: clean
