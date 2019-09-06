@@ -6,7 +6,7 @@ This differs from the standard library in that whereas most programs will rely o
 
 This package provides:
 
-- Lists
+- Doubly-linked lists
 - Poison for C functions which pose a security threat
 - Basic I/O functions on C strings
 - A check to ensure that a favourable OS is being used to for compilation
