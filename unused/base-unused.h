@@ -38,4 +38,6 @@
 #	define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
 
+#define UNUSED_RETURN(x) (void)x
+
 #endif /* BASE_UNUSED_H_ */

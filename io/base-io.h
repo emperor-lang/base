@@ -12,6 +12,7 @@
  *
  */
 
+#include "../unused/base-unused.h"
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -57,14 +57,14 @@ static void registerSignal(int sig, void (*handler)(int))
 {
 	if (signal(sig, handler))
 	{
-		fprintf(stderr, "Failed to register handler for signal %s\n", sigToA(sig));
+		UNUSED_RETURN(fprintf(stderr, "Failed to register handler for signal %s\n", sigToA(sig)));
 		exit(EXIT_FAILURE);
 	}
 }
 
 static void abortingSignalHandler(int sig)
 {
-	fprintf(stderr, "Received signal %s\n", sigToA(sig));
+	UNUSED_RETURN(fprintf(stderr, "Received signal %s\n", sigToA(sig)));
 	printStackTrace();
 	abort();
 }
@@ -73,7 +73,7 @@ static void graciousSignalHandler(int UNUSED(signal)) { exit(EXIT_FAILURE); }
 
 static void printStackTrace()
 {
-	fprintf(stderr, "Stack trace:\n");
+	UNUSED_RETURN(fprintf(stderr, "Stack trace:\n"));
 	void* callStack[g_base_callStackSize];
 	size_t size = backtrace(callStack, g_base_callStackSize);
 	backtrace_symbols_fd(callStack, size, STDERR_FILENO);
@@ -96,7 +96,7 @@ static char* sigToA(int signal)
 		char* str                    = (char*)malloc(signalStringLength * sizeof(char));
 		if (str == NULL)
 		{
-			fprintf(stderr, "Failed to allocate space while handling signal %d\n", signal);
+			UNUSED_RETURN(fprintf(stderr, "Failed to allocate space while handling signal %d\n", signal));
 			exit(EXIT_FAILURE);
 		}
 

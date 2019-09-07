@@ -55,7 +55,7 @@ base_EmperorList_t* base_initEmperorList(void);
  * @param lst List to destroy
  * @param valueDestructor A function applied to each element
  */
-void base_destroyEmperorList(base_EmperorList_t* lst, void (*valueDestructor)(base_Any_t));
+void base_destroyEmperorList(base_EmperorList_t* lst, void (*elementDestructor)(base_Any_t));
 
 /**
  * @brief Return whether the list is empty

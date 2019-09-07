@@ -16,7 +16,7 @@ void base_initEmperor(void)
 {
 	if (g_startupComplete)
 	{
-		fprintf(stderr, "Emperor setup can only be performed once");
+		UNUSED_RETURN(fprintf(stderr, "Emperor setup can only be performed once"));
 		exit(EXIT_FAILURE);
 	}
 
