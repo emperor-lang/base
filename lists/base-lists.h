@@ -13,6 +13,7 @@
  */
 
 #include "../generics/base-generics.h"
+#include "../unused/base-unused.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
