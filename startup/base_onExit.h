@@ -12,8 +12,9 @@
  *
  */
 
-#include <stdio.h>
-
+/**
+ * @brief Cleans up the execution of an Emperor program
+ */
 void base_exitEmperor(void);
 
 #endif /* BASE_ONEXIT_H_ */

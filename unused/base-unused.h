@@ -14,15 +14,27 @@
 
 // Thankyou, ideasman42! https://stackoverflow.com/questions/3599160/how-to-suppress-unused-parameter-warnings-in-c
 #ifdef __GNUC__
+/**
+ * @brief Defines a variable as unused
+ */
 #	define UNUSED(x) UNUSED_##x __attribute__((__unused__))
 #else
+/**
+ * @brief Defines a variable as unused
+ */
 #	define UNUSED(x) UNUSED_##x
 #endif
 
 // Thankyou, ideasman42! https://stackoverflow.com/questions/3599160/how-to-suppress-unused-parameter-warnings-in-c
 #ifdef __GNUC__
+/**
+ * @brief Defines a function as unused
+ */
 #	define UNUSED_FUNCTION(x) __attribute__((__unused__)) UNUSED_##x
 #else
+/**
+ * @brief Defines a function as unused
+ */
 #	define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
 

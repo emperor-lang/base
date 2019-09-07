@@ -16,6 +16,11 @@
 #include "base_onExit.h"
 #include <stdbool.h>
 
+/**
+ * @brief Prepare for the execution of emperor code. This should be the first 
+ * 		  call in the `main` function of an emperor program.
+ * 
+ */
 void base_initEmperor(void);
 
 #endif /* BASE_ONSTARTUP_H_ */
