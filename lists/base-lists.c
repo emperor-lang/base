@@ -210,10 +210,10 @@ base_EmperorList_t* base_unite(base_EmperorList_t* lst1, base_EmperorList_t* lst
 	return lst1;
 }
 
-base_EmperorList_t* base_stringToCharList(char* str) { return base_stringToCharListL(str, strlen(str)); }
-
-base_EmperorList_t* base_stringToCharListL(char* str, size_t length)
+base_EmperorList_t* base_stringToCharList(char* str)
 {
+	size_t length = strlen(str);
+
 	base_EmperorList_t* toReturn = (base_EmperorList_t*)malloc(sizeof(base_EmperorList_t));
 	if (toReturn == NULL)
 	{
