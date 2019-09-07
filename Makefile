@@ -3,7 +3,7 @@
 .DEFAULT_GOAL := all
 
 CC := gcc-8
-CFLAGS := -Wall -Wextra -Wpedantic -Werror -pedantic-errors -c -O3 -g
+CFLAGS = $(shell emperor-setup -cb)
 AR := ar
 ARFLAGS := -rUucs
 
