@@ -6,9 +6,11 @@ CC := gcc-8
 CFLAGS = $(shell emperor-setup -cb)
 AR := ar
 ARFLAGS := -rUucs
+LINTER := splint
+LINTER_FLAGS = -D__linux +posixstrictlib -stats -showsummary -linelen $(shell stty size | grep -o '[0-9]*$$') -checks -mustfreefresh # -strict
 
 ALL_SOURCE_FILES = $(shell find . -name '*.[ch]')
-BASE_SOURCE_FILES = $(shell find . -name '*.[ch]' | grep -v banned/)
+BASE_SOURCE_FILES = $(shell find . -name '*.[ch]' | grep -v banned/ | grep -v test/)
 
 all: libbase.a base.h.gch
 .PHONY: all
@@ -27,7 +29,7 @@ base.h.gch: ./base.h
 %.h: %.c;
 
 lint: $(BASE_SOURCE_FILES)
-	splint $^
+	$(LINTER) $(LINTER_FLAGS) $^
 .PHONY: lint
 
 doc: ./doc/html/index.html
