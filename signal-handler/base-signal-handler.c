@@ -14,22 +14,34 @@ int g_base_callStackSize = 25;
 
 void base_registerSignals(void)
 {
-	printf("Initialising Emperor\n");
-	signal(SIGINT, signalHandler);
-	signal(SIGSEGV, signalHandler);
+	registerSignal(SIGSEGV, abortingSignalHandler);
+	registerSignal(SIGINT, graciousSignalHandler);
 }
 
-void signalHandler(int signal)
+void registerSignal(int sig, void (*handler)(int sig))
 {
+	if (signal(sig, handler))
+	{
+		fprintf(stderr, "Failed to register handler for signal %s\n", sigToA(sig));
+		exit(EXIT_FAILURE);
+	}
+}
+
+void abortingSignalHandler(int sig)
+{
+	fprintf(stderr, "Received signal %s\n", sigToA(sig));
+	printStackTrace();
+	abort();
+}
+
+void graciousSignalHandler(int UNUSED(signal)) { exit(EXIT_FAILURE); }
+
+void printStackTrace()
+{
+	fprintf(stderr, "Stack trace:\n");
 	void* callStack[g_base_callStackSize];
 	size_t size = backtrace(callStack, g_base_callStackSize);
-
-	char* rep = sigToA(signal);
-	fprintf(stderr, "\nReceived signal %s!\n", rep);
-	fprintf(stderr, "Printing stack trace\n");
 	backtrace_symbols_fd(callStack, size, STDERR_FILENO);
-	fprintf(stderr, "Ejecting core\n");
-	exit(EXIT_FAILURE);
 }
 
 char* sigToA(int signal)
@@ -44,12 +56,19 @@ char* sigToA(int signal)
 	}
 	else
 	{
-		const int signalStringLength = 6;
+		// Assumes that the signal value <= 100 (Given by the <=64 indicated by `kill -l`)
+		const int signalStringLength = signal > 10 ? 3 : 2;
 		char* str                    = (char*)malloc(signalStringLength * sizeof(char));
-		int pos                      = signalStringLength - 2;
+		if (str == NULL)
+		{
+			fprintf(stderr, "Failed to allocate space while handling signal %d\n", signal);
+			exit(EXIT_FAILURE);
+		}
+
+		int pos = signalStringLength - 2;
 		while (signal > 0 && pos >= 0)
 		{
-			str[pos--] = signal % 10;
+			str[pos--] = signal % 10 + '0';
 			signal /= 10;
 		}
 		str[signalStringLength - 1] = '\0';
