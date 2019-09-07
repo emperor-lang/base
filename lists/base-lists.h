@@ -149,15 +149,6 @@ base_EmperorList_t* base_unite(base_EmperorList_t* lst1, base_EmperorList_t* lst
 base_EmperorList_t* base_stringToCharList(char* str);
 
 /**
- * @brief Convert a C string to a list of characters
- *
- * @param str The string to convert
- * @param length The length of the string
- * @return base_EmperorList_t* A list of characters
- */
-base_EmperorList_t* base_stringToCharListL(char* str, size_t length);
-
-/**
  * @brief Convert a list of characters in to a C string
  *
  * @param lst A list of characters
