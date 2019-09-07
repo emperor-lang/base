@@ -10,6 +10,41 @@
  */
 #include "base-signal-handler.h"
 
+/**
+ * @brief Register a signal handler for a particular signal, failing appropriately
+ *
+ * @param sig The signal for the new handler
+ * @param handler The function to handle the signal
+ */
+static void registerSignal(int sig, void (*handler)(int));
+
+/**
+ * @brief Default handler for signals which require an immediate, ungracious exit
+ *
+ * @param signal The signal code
+ */
+static void abortingSignalHandler(int signal);
+
+/**
+ * @brief Default handler for signals which graciously cause an exit
+ *
+ * @param signal The signal code
+ */
+static void graciousSignalHandler(int signal);
+
+/**
+ * @brief Print a stack-trace at the current point of execution
+ */
+static void printStackTrace();
+
+/**
+ * @brief Obtain a string representation of a signal
+ *
+ * @param signal The code of the signal to convert
+ * @return char* A string representation of the signal
+ */
+static char* sigToA(int signal);
+
 int g_base_callStackSize = 25;
 
 void base_registerSignals(void)
@@ -18,7 +53,7 @@ void base_registerSignals(void)
 	registerSignal(SIGINT, graciousSignalHandler);
 }
 
-void registerSignal(int sig, void (*handler)(int sig))
+static void registerSignal(int sig, void (*handler)(int))
 {
 	if (signal(sig, handler))
 	{
@@ -27,16 +62,16 @@ void registerSignal(int sig, void (*handler)(int sig))
 	}
 }
 
-void abortingSignalHandler(int sig)
+static void abortingSignalHandler(int sig)
 {
 	fprintf(stderr, "Received signal %s\n", sigToA(sig));
 	printStackTrace();
 	abort();
 }
 
-void graciousSignalHandler(int UNUSED(signal)) { exit(EXIT_FAILURE); }
+static void graciousSignalHandler(int UNUSED(signal)) { exit(EXIT_FAILURE); }
 
-void printStackTrace()
+static void printStackTrace()
 {
 	fprintf(stderr, "Stack trace:\n");
 	void* callStack[g_base_callStackSize];
@@ -44,7 +79,7 @@ void printStackTrace()
 	backtrace_symbols_fd(callStack, size, STDERR_FILENO);
 }
 
-char* sigToA(int signal)
+static char* sigToA(int signal)
 {
 	if (signal == SIGSEGV)
 	{
