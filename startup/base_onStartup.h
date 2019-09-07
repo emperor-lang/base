@@ -16,8 +16,6 @@
 #include "base_onExit.h"
 #include <stdbool.h>
 
-static bool startupComplete;
-
 void base_initEmperor(void);
 
 #endif /* BASE_ONSTARTUP_H_ */

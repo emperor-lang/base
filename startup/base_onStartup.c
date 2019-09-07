@@ -10,11 +10,11 @@
  */
 #include "base_onStartup.h"
 
-static bool startupComplete = false;
+static bool g_startupComplete = false;
 
 void base_initEmperor(void)
 {
-	if (startupComplete)
+	if (g_startupComplete)
 	{
 		fprintf(stderr, "Emperor setup can only be performed once");
 		exit(EXIT_FAILURE);
@@ -23,5 +23,5 @@ void base_initEmperor(void)
 	base_registerSignals();
 	atexit(base_exitEmperor);
 
-	startupComplete = true;
+	g_startupComplete = true;
 }
