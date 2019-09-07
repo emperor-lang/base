@@ -13,6 +13,10 @@
  */
 
 #include "../signal-handler/base-signal-handler.h"
+#include "base_onExit.h"
+#include <stdbool.h>
+
+static bool startupComplete;
 
 void base_initEmperor(void);
 
