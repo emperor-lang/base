@@ -13,6 +13,7 @@
  */
 
 #include "../generics/base-generics.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,24 +27,9 @@
 typedef long int base_ReferenceIndex_t;
 
 /**
- * @brief Stores context parent and identifier
+ * @brief Represents a value in a given context
  */
-typedef struct base_referenceContext
-{
-	/**
-	 * @brief The index of the current context
-	 */
-	const base_ReferenceIndex_t idx;
-	/**
-	 * @brief The parent context
-	 */
-	const struct base_referenceContext* parent;
-} base_ReferenceContext_t;
-
-/**
- * @brief A reference with a particular value in a given context
- */
-typedef struct base_reference
+typedef struct base_value
 {
 	/**
 	 * @brief The value of the reference in the context given by idx
@@ -52,20 +38,50 @@ typedef struct base_reference
 	/**
 	 * @brief Index of this content
 	 */
-	const base_ReferenceIndex_t idx;
+	base_ReferenceIndex_t idx;
 	/**
 	 * @brief The sub-tree of contexts with an index less than `idx`
 	 */
-	const struct base_reference* leftChild;
+	struct base_reference* leftChild;
 	/**
 	 * @brief The sub-tree of contexts with an index greater than `idx`
 	 */
-	const struct base_reference* rightChild;
+	struct base_reference* rightChild;
 	/**
 	 * @brief Flag indicates whether this reference may be freed (it is no longer required but is still necessary for
 	 *        searching this unbalanced binary tree)
 	 */
 	bool canBeFreed;
+} base_Value_t;
+
+/**
+ * @brief Stores context parent and identifier
+ */
+typedef struct base_referenceContext
+{
+	/**
+	 * @brief The index of the current context
+	 */
+	base_ReferenceIndex_t idx;
+	/**
+	 * @brief The parent context
+	 */
+	const struct base_referenceContext* parent;
+} base_ReferenceContext_t;
+
+/**
+ * @brief Represents a reference in a specified context
+ */
+typedef struct base_reference
+{
+	/**
+	 * @brief The root value of the reference
+	 */
+	base_Value_t val;
+	/**
+	 * @brief The context of the reference
+	 */
+	base_ReferenceContext_t* ctx;
 } base_Reference_t;
 
 /**
@@ -76,24 +92,15 @@ typedef struct base_reference
  * @param ctx The required context
  * @return base_Any_t The value of the reference in the given context
  */
-base_Any_t base_dereference(const base_Reference_t ref, const base_ReferenceContext_t ctx);
-
-/**
- * @brief Make a new context as a child of a specified one
- *
- * @param ctx The parent of the new context
- * @return const base_ReferenceContext_t* Pointer to the new context
- */
-base_ReferenceContext_t base_makeNewContext(const base_ReferenceContext_t ctx);
+base_Any_t base_dereference(const base_Reference_t ref);
 
 /**
  * @brief Make new reference in a specified context with a given value
  *
- * @param ctx The context of the new reference
  * @param value The value of the new reference
  * @return base_Reference_t The new reference
  */
-base_Reference_t base_makeNewReference(const base_ReferenceContext_t ctx, base_Any_t value);
+base_Reference_t* base_makeNewReference(base_Any_t value);
 
 /**
  * @brief Create a change to a given reference in a given context
@@ -102,6 +109,6 @@ base_Reference_t base_makeNewReference(const base_ReferenceContext_t ctx, base_A
  * @param ctx The context of the new change
  * @param value The value of the new change
  */
-void base_authorReferenceChange(const base_Reference_t ref, const base_ReferenceContext_t ctx, base_Any_t value);
+base_Reference_t base_authorReferenceChange(const base_Reference_t ref, base_Any_t value);
 
 #endif /* BASE_REFERENCES_H_ */
