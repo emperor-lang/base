@@ -10,6 +10,16 @@
  */
 #include "base-references.h"
 
+/**
+ * @brief Search a reference for a value in the context exactly specified by idx
+ *
+ * @param ref Pointer to the root of the reference tree to search
+ * @param idx The context to search for
+ * @return base_Any_t* A pointer to the value, or *NULL* if the required context is absent from the context tree (i.e.
+ * 		   			   it makes no change)
+ */
+static base_Any_t* getReferenceValueByIndex(const base_Reference_t* ref, base_ReferenceIndex_t idx);
+
 base_Any_t base_dereference(const base_Reference_t rootRef, const base_ReferenceContext_t ctx)
 {
 	base_Any_t* toReturn             = NULL;

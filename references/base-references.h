@@ -30,7 +30,13 @@ typedef long int base_ReferenceIndex_t;
  */
 typedef struct base_referenceContext
 {
+	/**
+	 * @brief The index of the current context
+	 */
 	const base_ReferenceIndex_t idx;
+	/**
+	 * @brief The parent context
+	 */
 	const struct base_referenceContext* parent;
 } base_ReferenceContext_t;
 
@@ -39,10 +45,26 @@ typedef struct base_referenceContext
  */
 typedef struct base_reference
 {
+	/**
+	 * @brief The value of the reference in the context given by idx
+	 */
 	base_Any_t value;
+	/**
+	 * @brief Index of this content
+	 */
 	const base_ReferenceIndex_t idx;
+	/**
+	 * @brief The sub-tree of contexts with an index less than `idx`
+	 */
 	const struct base_reference* leftChild;
+	/**
+	 * @brief The sub-tree of contexts with an index greater than `idx`
+	 */
 	const struct base_reference* rightChild;
+	/**
+	 * @brief Flag indicates whether this reference may be freed (it is no longer required but is still necessary for
+	 *        searching this unbalanced binary tree)
+	 */
 	bool canBeFreed;
 } base_Reference_t;
 
@@ -55,16 +77,6 @@ typedef struct base_reference
  * @return base_Any_t The value of the reference in the given context
  */
 base_Any_t base_dereference(const base_Reference_t ref, const base_ReferenceContext_t ctx);
-
-/**
- * @brief Search a reference for a value in the context exactly specified by idx
- *
- * @param ref Pointer to the root of the reference tree to search
- * @param idx The context to search for
- * @return base_Any_t* A pointer to the value, or *NULL* if the required context is absent from the context tree (i.e.
- * 		   			   it makes no change)
- */
-static base_Any_t* getReferenceValueByIndex(const base_Reference_t* ref, base_ReferenceIndex_t idx);
 
 /**
  * @brief Make a new context as a child of a specified one
