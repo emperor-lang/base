@@ -37,7 +37,7 @@ typedef struct base_pointerValue
 	/**
 	 * @brief The value of the reference in the context given by idx
 	 */
-	void* val;
+	void* value;
 	/**
 	 * @brief Index of this content
 	 */
@@ -65,12 +65,21 @@ typedef struct base_reference
 	/**
 	 * @brief The root value of the reference
 	 */
-	base_PointerValue_t ptr;
+	base_PointerValue_t val;
 	/**
 	 * @brief The context of the reference
 	 */
 	base_ReferenceContext_t* ctx;
 } base_Reference_t;
+
+typedef struct base_any
+{
+	int intV;
+	char charV;
+	bool boolV;
+	double doubleV;
+	base_Reference_t* referenceV;
+} base_Any_t;
 
 /**
  * @brief Obtain the value of a reference in the given context or its closest parent which has an associated value
@@ -88,7 +97,7 @@ void* base_dereference(const base_Reference_t* ref);
  * @param value The value of the new reference
  * @return base_Reference_t The new reference
  */
-base_Reference_t* base_reference(void* obj);
+base_Any_t base_reference(void* obj);
 
 /**
  * @brief Create a change to a given reference in a given context
@@ -97,15 +106,6 @@ base_Reference_t* base_reference(void* obj);
  * @param ctx The context of the new change
  * @param value The value of the new change
  */
-base_Reference_t* base_authorReferenceChange(base_Reference_t ref, void* obj);
-
-typedef struct base_any
-{
-	int intV;
-	char charV;
-	bool boolV;
-	double doubleV;
-	base_Reference_t* referenceV;
-} base_Any_t;
+void base_authorReferenceChange(const base_Reference_t* ref, const base_ReferenceContext_t* ctx, void* value);
 
 #endif /* BASE_GENERICS_H_ */
