@@ -1,72 +1,98 @@
 #include "base-lists.h"
 
-base_EmperorList_t* base_initEmperorList(void)
+static base_EmperorListNode_t* getNode(base_EmperorList_t*, int);
+static base_EmperorListNode_t* getFromFront(base_EmperorList_t*, int);
+static base_EmperorListNode_t* getFromBack(base_EmperorList_t*, int);
+
+base_Any_t base_initEmperorList(void)
 {
-	base_EmperorList_t* lst = (base_EmperorList_t*)calloc(1, sizeof(base_EmperorList_t*));
+	base_EmperorList_t* lst = (base_EmperorList_t*)calloc(1, sizeof(base_EmperorList_t));
 	if (lst == NULL)
 	{
 		fprintf(stderr, "Could not allocate space for list");
 		exit(EXIT_FAILURE);
 	}
 
-	return lst;
+	return base_reference(lst);
 }
 
-void base_destroyEmperorList(base_EmperorList_t* lst, void (*elementDestructor)(base_Any_t))
+void base_destroyEmperorList(base_Any_t UNUSED(lst), void (*elementDestructor)(base_Any_t))
 {
-	base_EmperorListNode_t* node = lst->first;
-	base_EmperorListNode_t* next;
+	fprintf(stderr, "Failed to free memory used by Emperor list (unimplemented)\n");
+	exit(EXIT_FAILURE);
+	elementDestructor = elementDestructor;
 
-	while (node != NULL)
+	// base_EmperorListNode_t* node = lst.referenceV->first;
+	// base_EmperorListNode_t* next;
+
+	// while (node != NULL)
+	// {
+	// 	next = node->succ;
+	// 	printf("Freeing node value\n");
+	// 	elementDestructor(node->value);
+	// 	printf("Freeing node\n");
+	// 	free(node);
+	// 	node = next;
+	// }
+
+	// free(lst.referenceV);
+}
+
+bool base_isEmpty(base_Any_t lst)
+{
+	base_EmperorList_t* lstVal = base_dereference(lst.referenceV);
+	return lstVal == NULL || lstVal->length.intV == 0
+	    || (lstVal->first.referenceV == NULL && lstVal->last.referenceV == NULL);
+}
+
+base_Any_t base_del(base_Any_t lst, int idx)
+{
+	base_EmperorList_t* lstVal   = base_dereference(lst.referenceV);
+	base_EmperorListNode_t* node = getNode(lstVal, idx);
+	lstVal->length.intV--;
+
+	if (base_dereference(node->prev.referenceV) == NULL)
 	{
-		next = node->succ;
-		printf("Freeing node value\n");
-		elementDestructor(node->value);
-		printf("Freeing node\n");
-		free(node);
-		node = next;
-	}
-
-	free(lst);
-}
-
-bool base_isEmpty(base_EmperorList_t* lst)
-{
-	return lst == NULL || lst->length == 0 || (lst->first == NULL && lst->first == NULL);
-}
-
-base_EmperorList_t* base_del(base_EmperorList_t* lst, int idx)
-{
-	base_EmperorListNode_t* node = getNode(lst, idx);
-
-	if (node->prev == NULL)
-	{
-		lst->first       = node->succ;
-		node->succ->prev = NULL;
+		// lstVal->first     = node->succ;
+		base_authorReferenceChange(
+		    lstVal->first.referenceV, lst.referenceV->ctx, base_dereference(node->succ.referenceV));
+		// node->succ->prev         = NULL;
+		base_authorReferenceChange(((base_EmperorListNode_t*)base_dereference(node->succ.referenceV))->prev.referenceV,
+		    lst.referenceV->ctx, NULL);
 	}
 	else
 	{
-		node->prev->succ = node->succ;
+		// node->prev->succ = node->succ
+		base_authorReferenceChange(((base_EmperorListNode_t*)base_dereference(node->prev.referenceV))->succ.referenceV,
+		    lst.referenceV->ctx, base_dereference(node->succ.referenceV));
 	}
 
-	if (node->succ == NULL)
+	if (base_dereference(node->succ.referenceV) == NULL)
 	{
-		lst->last        = node->prev;
-		node->prev->succ = NULL;
+		// lstVal->last     = node->prev;
+		base_authorReferenceChange(
+		    lstVal->last.referenceV, lst.referenceV->ctx, base_dereference(node->prev.referenceV));
+		// node->prev->succ = NULL;
+		base_authorReferenceChange(((base_EmperorListNode_t*)base_dereference(node->prev.referenceV))->succ.referenceV,
+		    lst.referenceV->ctx, NULL);
 	}
 	else
 	{
-		node->succ->prev = node->prev;
+		// node->succ->prev = node->prev;
+		base_authorReferenceChange(((base_EmperorListNode_t*)base_dereference(node->succ.referenceV))->prev.referenceV,
+		    lst.referenceV->ctx, base_dereference(node->prev.referenceV));
+		// base_authorReferenceChange(
+		//     ((base_EmperorListNode_t*)base_dereference(node->succ.referenceV))->prev.referenceV,
+		//     node->prev.referenceV) .referenceV;
 	}
-
-	lst->length--;
 
 	return lst;
 }
 
-base_Any_t base_get(base_EmperorList_t* lst, int idx)
+base_Any_t base_get(base_Any_t lst, int idx)
 {
-	base_EmperorListNode_t* n = getNode(lst, idx);
+	base_EmperorList_t* lstVal = base_dereference(lst.referenceV);
+	base_EmperorListNode_t* n  = getNode(lstVal, idx);
 	if (n == NULL)
 	{
 		fprintf(stderr, "List search returned NULL\n");
@@ -76,49 +102,51 @@ base_Any_t base_get(base_EmperorList_t* lst, int idx)
 }
 
 // Precondition: lst != NULL
-base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx)
+static base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx)
 {
-	if (idx > lst->length)
+	if (idx > lst->length.intV)
 	{
-		fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length);
+		fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length.intV);
 		exit(EXIT_FAILURE);
 	}
 
 	// ~2x speed boost in general, but this is still O(n) ¯\_(ツ)_/¯
-	if (idx <= lst->length / 2)
+	if (idx <= lst->length.intV / 2)
 		return getFromFront(lst, idx);
 	else
 		return getFromBack(lst, idx);
 }
 
 // Precondition: lst != NULL && idx <= lst->length
-base_EmperorListNode_t* getFromFront(base_EmperorList_t* lst, int idx)
+static base_EmperorListNode_t* getFromFront(base_EmperorList_t* lst, int idx)
 {
-	base_EmperorListNode_t* curr = lst->first;
+	base_EmperorListNode_t* curr = (base_EmperorListNode_t*)base_dereference(lst->first.referenceV);
 	while (idx > 0)
 	{
-		curr = curr->succ;
+		curr = (base_EmperorListNode_t*)base_dereference(curr->succ.referenceV);
 		idx--;
 	}
 	return curr;
 }
 
 // Precondition: lst != NULL && lst->length/2 <= idx <= lst->length
-base_EmperorListNode_t* getFromBack(base_EmperorList_t* lst, int idx)
+static base_EmperorListNode_t* getFromBack(base_EmperorList_t* lst, int idx)
 {
-	idx                          = lst->length - idx;
-	base_EmperorListNode_t* curr = lst->last;
+	idx                          = lst->length.intV - idx;
+	base_EmperorListNode_t* curr = (base_EmperorListNode_t*)base_dereference(lst->last.referenceV);
 	while (idx > 0)
 	{
-		curr = curr->prev;
+		curr = (base_EmperorListNode_t*)base_dereference(curr->prev.referenceV);
 		idx--;
 	}
 	return curr;
 }
 
 // Precondition: lst != NULL
-base_EmperorList_t* base_append(base_EmperorList_t* lst, base_Any_t value)
+// TODO: Author changes here
+base_Any_t base_append(base_Any_t lst, base_Any_t value)
 {
+	base_EmperorList_t* lstVal = base_dereference(lst.referenceV);
 	printf("Running base_append(..)\n");
 	base_EmperorListNode_t* node = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
 	printf("A");
@@ -132,22 +160,22 @@ base_EmperorList_t* base_append(base_EmperorList_t* lst, base_Any_t value)
 	node->prev  = NULL;
 	printf("a");
 
-	if (lst->last == NULL)
+	if (lstVal->last == NULL)
 	{
 		// The list is empty
 		printf("a");
-		lst->last   = node;
-		lst->first  = node;
-		lst->length = 1;
+		lstVal->last   = node;
+		lstVal->first  = node;
+		lstVal->length = 1;
 	}
 	else
 	{
 		// General case
 		printf("a");
-		lst->last->succ = node;
-		node->prev      = lst->last;
-		lst->last       = node;
-		lst->length++;
+		lstVal->last->succ = node;
+		node->prev         = lstVal->last;
+		lstVal->last       = node;
+		lstVal->length++;
 	}
 	printf("X\n");
 
@@ -155,7 +183,7 @@ base_EmperorList_t* base_append(base_EmperorList_t* lst, base_Any_t value)
 }
 
 // Precondition: lst != NULL
-base_EmperorList_t* base_prepend(base_EmperorList_t* lst, base_Any_t value)
+base_Any_t base_prepend(base_Any_t lst, base_Any_t value)
 {
 	base_EmperorListNode_t* node = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
 	if (node == NULL)
@@ -184,7 +212,7 @@ base_EmperorList_t* base_prepend(base_EmperorList_t* lst, base_Any_t value)
 	return lst;
 }
 
-base_EmperorList_t* base_unite(base_EmperorList_t* lst1, base_EmperorList_t* lst2)
+base_Any_t base_unite(base_Any_t lst1, base_Any_t lst2)
 {
 	// Handle cases where list is empty
 	if (base_isEmpty(lst1))
@@ -200,16 +228,17 @@ base_EmperorList_t* base_unite(base_EmperorList_t* lst1, base_EmperorList_t* lst
 	return lst1;
 }
 
-base_EmperorList_t* base_stringToCharList(char* str) { return base_stringToCharListL(str, strlen(str)); }
-
-base_EmperorList_t* base_stringToCharListL(char* str, size_t length)
+base_Any_t base_stringToCharList(char* str)
 {
-	base_EmperorList_t* toReturn = (base_EmperorList_t*)malloc(sizeof(base_EmperorList_t));
-	if (toReturn == NULL)
+	size_t length = strlen(str);
+
+	base_EmperorList_t* lst = (base_EmperorList_t*)malloc(sizeof(base_EmperorList_t));
+	if (lst == NULL)
 	{
 		fprintf(stderr, "Could not allocate memory for list\n");
 		exit(EXIT_FAILURE);
 	}
+	base_Any_t toReturn = base_reference(lst);
 
 	for (size_t i = 0; i < length; i++)
 	{
@@ -220,13 +249,14 @@ base_EmperorList_t* base_stringToCharListL(char* str, size_t length)
 	return toReturn;
 }
 
-char* base_charListToString(base_EmperorList_t* lst)
+char* base_charListToString(base_Any_t lst)
 {
-	int len   = lst->length;
-	char* buf = (char*)malloc(len * sizeof(char) + 1);
+	base_EmperorList_t* lstVal = (base_EmperorList_t*)base_dereference(lst.referenceV);
+	int len                    = lstVal->length;
+	char* buf                  = (char*)malloc(len * sizeof(char) + 1);
 
-	base_EmperorListNode_t* curr = lst->first;
-	for (int i = 0; i < len && curr != NULL; i++, curr = curr->succ)
+	base_EmperorListNode_t* curr = (base_EmperorListNode_t*)base_dereference(lstVal->first.referenceV);
+	for (int i = 0; i < len && curr != NULL; i++, curr = base_dereference(curr->succ.referenceV))
 	{
 		buf[i] = curr->value.charV;
 	}
