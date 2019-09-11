@@ -1,5 +1,9 @@
 #include "base-generics.h"
 
+typedef bool ChildIdentifier_t;
+#define LEFT_CHILD true
+#define RIGHT_CHILD false
+
 /**
  * @brief Search a reference for a value in the context exactly specified by idx
  *
@@ -11,21 +15,24 @@
 static void* getReferenceValueByIndex(const base_Reference_t* ref, base_ReferenceIndex_t idx);
 
 /**
- * @brief Make a new context as a child of a specified one
- *
- * @param ctx The parent of the new context
- * @return const base_ReferenceContext_t* Pointer to the new context
- */
-static base_ReferenceContext_t* makeNewContext(const base_ReferenceContext_t* ctx);
-
-/**
  * @brief Make a new pointer value in the context with a given index
  *
  * @param value The value to hold
  * @param ctx The context of the pointer value
  * @return base_Value_t* The stored value struct
  */
-static base_PointerValue_t makeNewValue(void* value, base_ReferenceContext_t* ctx);
+static base_PointerValue_t makeNewValue(void* value, const base_ReferenceContext_t* ctx);
+
+/**
+ * @brief Add a node to the reference's changes tree
+ *
+ * @param parent The parent in the reference tree
+ * @param childToUse Indicates which child in the tree to use
+ * @param ctx The context of the change
+ * @param value The value of the change
+ */
+static void hangChangeOnReferenceTree(
+    base_Reference_t* parent, ChildIdentifier_t childToUse, const base_ReferenceContext_t* ctx, void* value);
 
 void* base_dereference(const base_Reference_t* ref)
 {
@@ -80,7 +87,7 @@ static void* getReferenceValueByIndex(const base_Reference_t* ref, const base_Re
 	return NULL;
 }
 
-base_Any_t base_reference(void* value)
+base_Any_t base_reference(void* value, const base_ReferenceContext_t* ctx)
 {
 	base_Reference_t* ref = (base_Reference_t*)malloc(sizeof(base_Reference_t));
 	if (ref == NULL)
@@ -89,13 +96,13 @@ base_Any_t base_reference(void* value)
 		exit(EXIT_FAILURE);
 	}
 
-	ref->ctx = makeNewContext(NULL);
+	ref->ctx = (base_ReferenceContext_t*)ctx;
 	ref->val = makeNewValue(value, ref->ctx);
 
 	return (base_Any_t){ .referenceV = ref };
 }
 
-static base_PointerValue_t makeNewValue(void* value, base_ReferenceContext_t* ctx)
+static base_PointerValue_t makeNewValue(void* value, const base_ReferenceContext_t* ctx)
 {
 	// base_PointerValue_t* val = (base_PointerValue_t*)malloc(sizeof(base_PointerValue_t));
 	// val->leftChild           = NULL;
@@ -105,15 +112,13 @@ static base_PointerValue_t makeNewValue(void* value, base_ReferenceContext_t* ct
 	// val->canBeFreed          = false;
 
 	// return val;
-	return (
-	    base_PointerValue_t){ .leftChild = NULL, .rightChild = NULL, .value = value, .ctx = ctx, .canBeFreed = false };
+	return (base_PointerValue_t){
+		.leftChild = NULL, .rightChild = NULL, .value = value, .ctx = (base_ReferenceContext_t*)ctx, .canBeFreed = false
+	};
 }
 
 void base_authorReferenceChange(const base_Reference_t* ref, const base_ReferenceContext_t* ctx, void* value)
 {
-	// base_ReferenceContext_t* ctx = makeNewContext(ref->ctx);
-	// TODO: Manage context!
-
 	base_Reference_t* currRef = (base_Reference_t*)ref;
 	base_Reference_t* nextRef;
 
@@ -125,24 +130,8 @@ void base_authorReferenceChange(const base_Reference_t* ref, const base_Referenc
 			nextRef = (base_Reference_t*)currRef->val.leftChild;
 			if (nextRef == NULL)
 			{
-				base_Reference_t* newRefTreeNode = (base_Reference_t*)malloc(sizeof(base_Reference_t));
-				if (newRefTreeNode == NULL)
-				{
-					fprintf(stderr, "Failed to allocate space while authoring reference change\n");
-					exit(EXIT_FAILURE);
-				}
-				newRefTreeNode->ctx        = ctx;
-				newRefTreeNode->val        = makeNewValue(value, ctx);
-				currRef->val.leftChild     = newRefTreeNode;
-				base_Reference_t* toReturn = (base_Reference_t*)malloc(sizeof(base_Reference_t));
-				if (toReturn == NULL)
-				{
-					fprintf(stderr, "Failed to allocate space for new reference\n");
-					exit(EXIT_FAILURE);
-				}
-				toReturn->ctx = ctx;
-				toReturn->val = ref->val;
-				return (base_Any_t){ .referenceV = toReturn };
+				hangChangeOnReferenceTree(currRef, LEFT_CHILD, ctx, value);
+				return;
 			}
 			currRef = nextRef;
 		}
@@ -151,40 +140,48 @@ void base_authorReferenceChange(const base_Reference_t* ref, const base_Referenc
 			nextRef = (base_Reference_t*)currRef->val.rightChild;
 			if (nextRef == NULL)
 			{
-				base_Reference_t* newRefTreeNode = (base_Reference_t*)malloc(sizeof(base_Reference_t));
-				if (newRefTreeNode == NULL)
-				{
-					fprintf(stderr, "Failed to allocate space while authoring reference change\n");
-					exit(EXIT_FAILURE);
-				}
-				newRefTreeNode->ctx        = ctx;
-				newRefTreeNode->val        = makeNewValue(value, ctx);
-				currRef->val.rightChild    = newRefTreeNode;
-				base_Reference_t* toReturn = (base_Reference_t*)malloc(sizeof(base_Reference_t));
-				if (toReturn == NULL)
-				{
-					fprintf(stderr, "Failed to allocate space for new reference\n");
-					exit(EXIT_FAILURE);
-				}
-				toReturn->ctx = ctx;
-				toReturn->val = ref->val;
-				return (base_Any_t){ .referenceV = toReturn };
+				hangChangeOnReferenceTree(currRef, RIGHT_CHILD, ctx, value);
+				return;
 			}
 			currRef = nextRef;
 		}
 		else // currRef->ctx->idx == ctx.idx
 		{
-			// Context by this index already exists, so get a new one and restart the search. (It is assumed that the
-			// probability of many such collisions is extremely low.)
-			free(ctx);
-			// Restart the search with a new context identifier
-			ctx     = makeNewContext(ref->ctx);
-			currRef = (base_Reference_t*)ref;
+			currRef->val.value = value;
 		}
 	}
 }
 
-static base_ReferenceContext_t* makeNewContext(const base_ReferenceContext_t* parent)
+static void hangChangeOnReferenceTree(
+    base_Reference_t* parent, ChildIdentifier_t childToUse, const base_ReferenceContext_t* ctx, void* value)
+{
+	// Make the new node
+	base_Reference_t* newRefTreeNode = (base_Reference_t*)malloc(sizeof(base_Reference_t));
+	if (newRefTreeNode == NULL)
+	{
+		fprintf(stderr, "Failed to allocate space while authoring reference change\n");
+		exit(EXIT_FAILURE);
+	}
+	newRefTreeNode->ctx = (base_ReferenceContext_t*)ctx;
+	newRefTreeNode->val = makeNewValue(value, ctx);
+
+	// Hang the new node on the tree
+	if (childToUse == LEFT_CHILD)
+	{
+		parent->val.leftChild = newRefTreeNode;
+	}
+	else if (childToUse == RIGHT_CHILD)
+	{
+		parent->val.rightChild = newRefTreeNode;
+	}
+	else
+	{
+		fprintf(stderr, "Invalid child identifier: %d\n", childToUse);
+		exit(EXIT_FAILURE);
+	}
+}
+
+base_ReferenceContext_t* base_makeNewContext(const base_ReferenceContext_t* parent)
 {
 	// Generate the index of the new context;
 	// Thanks, Uli Schlachter! https://stackoverflow.com/questions/3665257/generate-random-long-number

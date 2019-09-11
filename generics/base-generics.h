@@ -95,9 +95,10 @@ void* base_dereference(const base_Reference_t* ref);
  * @brief Make new reference in a specified context with a given value
  *
  * @param value The value of the new reference
+ * @param ctx The context of the reference
  * @return base_Reference_t The new reference
  */
-base_Any_t base_reference(void* obj);
+base_Any_t base_reference(void* obj, const base_ReferenceContext_t* ctx);
 
 /**
  * @brief Create a change to a given reference in a given context
@@ -107,5 +108,13 @@ base_Any_t base_reference(void* obj);
  * @param value The value of the new change
  */
 void base_authorReferenceChange(const base_Reference_t* ref, const base_ReferenceContext_t* ctx, void* value);
+
+/**
+ * @brief Make a new context as a child of a specified one
+ *
+ * @param ctx The parent of the new context
+ * @return const base_ReferenceContext_t* Pointer to the new context
+ */
+base_ReferenceContext_t* base_makeNewContext(const base_ReferenceContext_t* ctx);
 
 #endif /* BASE_GENERICS_H_ */
