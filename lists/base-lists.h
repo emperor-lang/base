@@ -25,7 +25,7 @@ typedef struct base_emperorList
 base_Any_t base_initEmperorList(const base_ReferenceContext_t* ctx);
 void base_destroyEmperorList(base_Any_t, void (*)(base_Any_t));
 bool base_isEmpty(base_Any_t lst);
-base_Any_t base_del(base_Any_t, int);
+base_Any_t base_del(base_Any_t, int, const base_ReferenceContext_t*);
 base_Any_t base_get(base_Any_t, int);
 base_Any_t base_append(base_Any_t, base_Any_t);
 base_Any_t base_prepend(base_Any_t, base_Any_t);
