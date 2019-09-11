@@ -6,7 +6,6 @@
 #include "generics/base-generics.h"
 #include "io/base-io.h"
 #include "lists/base-lists.h"
-#include "references/base-references.h"
 #include "unused/base-unused.h"
 
 #include "banned/base-banned.h"

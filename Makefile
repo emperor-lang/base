@@ -10,7 +10,7 @@ ARFLAGS := -rcs
 all: libbase.a base.h
 .PHONY: all
 
-libbase.a: ./lists/base-lists.o ./references/base-references.o ./io/base-io.o ./generics/base-generics.o
+libbase.a: ./lists/base-lists.o ./io/base-io.o ./generics/base-generics.o
 	$(AR) $(ARFLAGS) $@ $^
 
 %.o: %.c %.h
