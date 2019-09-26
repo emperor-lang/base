@@ -9,7 +9,7 @@
 	"version": "1.2.0",
 	"files": [
 		"libbase.a",
-		"base.c.gch",
+		"base.h.gch",
 		"base.h",
 		"unused/base-unused.h",
 		"io/base-io.h",
