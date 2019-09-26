@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL := all
 
-CC := gcc-8
+CC := gcc
 CFLAGS = $(shell emperor-setup -cb)
 AR := ar
 ARFLAGS := -rUucs
