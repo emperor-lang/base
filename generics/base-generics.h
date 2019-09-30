@@ -2,8 +2,9 @@
 #define BASE_GENERICS_H_
 
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+#include "../unused/base-unused.h"
 
 // /**
 //  * @brief An identifier for a context
@@ -80,6 +81,8 @@ typedef struct base_any
 	double doubleV;
 	void* voidV;
 } base_Any_t;
+
+void base_noDestroy(base_Any_t _);
 
 // /**
 //  * @brief Obtain the value of a reference in the given context or its closest parent which has an associated value
