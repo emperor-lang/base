@@ -87,7 +87,7 @@ base_Any_t base_shallowCopyList(base_Any_t lst)
 // Precondition: lst != NULL
 static base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx)
 {
-	if (idx > lst->length.intV)
+	if (idx > lst->length.intV || 0 > idx)
 	{
 		fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length.intV);
 		exit(EXIT_FAILURE);
@@ -131,7 +131,7 @@ bool base_isEmpty(base_Any_t lst)
 	return lst.voidV == NULL || lstV->length.intV == 0 || (lstV->first.voidV == NULL && lstV->last.voidV == NULL);
 }
 
-base_Any_t base_del(base_Any_t lst, int idx, void (*elementDestructor)(base_Any_t))
+base_Any_t base_del(base_Any_t lst, base_Any_t idx, void (*elementDestructor)(base_Any_t))
 {
 	base_EmperorList_t* lstV = lst.voidV;
 	if (base_isEmpty(lst))
@@ -139,13 +139,13 @@ base_Any_t base_del(base_Any_t lst, int idx, void (*elementDestructor)(base_Any_
 		fprintf(stderr, "Failed to get element from empty list\n");
 		exit(EXIT_FAILURE);
 	}
-	else if (idx < 0 || lstV->length.intV <= idx)
+	else if (idx.intV < 0 || lstV->length.intV <= idx.intV)
 	{
-		fprintf(stderr, "Failed to get element %d from list of length %d\n", idx, lstV->length.intV);
+		fprintf(stderr, "Failed to get element %d from list of length %d\n", idx.intV, lstV->length.intV);
 		exit(EXIT_FAILURE);
 	}
 
-	base_EmperorListNode_t* nodeToDelete = getNode(lstV, idx);
+	base_EmperorListNode_t* nodeToDelete = getNode(lstV, idx.intV);
 
 	// Re-route pointers
 	((base_EmperorListNode_t*)(nodeToDelete->prev.voidV))->succ
@@ -161,7 +161,7 @@ base_Any_t base_del(base_Any_t lst, int idx, void (*elementDestructor)(base_Any_
 	return lst;
 }
 
-base_Any_t base_get(base_Any_t lst, int idx) { return getNode(lst.voidV, idx)->value; }
+base_Any_t base_get(base_Any_t lst, base_Any_t idx) { return getNode(lst.voidV, idx.intV)->value; }
 
 base_Any_t base_append(base_Any_t lst, base_Any_t value)
 {
@@ -195,6 +195,8 @@ base_Any_t base_append(base_Any_t lst, base_Any_t value)
 
 base_Any_t base_prepend(base_Any_t lst, base_Any_t value)
 {
+	// TODO: Match the method above, this one seems to have a tonne of lost memory
+
 	base_EmperorList_t* lstV        = lst.voidV;
 	base_EmperorListNode_t* newNode = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
 	if (newNode == NULL)
