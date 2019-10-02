@@ -1,6 +1,17 @@
 #ifndef BASE_OS_H_
 #define BASE_OS_H_
 
+/**
+ * @file base-OS.h
+ * @author Ed Jones (ed@kcza.net)
+ * @brief Checks that Emperor code is being compiled by a favourable operating system
+ * @version 0.1
+ * @date 2019-09-06
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
+
 #ifdef _WIN64
 #	error "64-bit Windows is not supported"
 #elif _WIN32

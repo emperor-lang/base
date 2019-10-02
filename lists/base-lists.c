@@ -1,3 +1,13 @@
+/**
+ * @file base-lists.c
+ * @author Ed Jones (ed@kcza.net)
+ * @brief Defines functions to create, handle and destroy lists
+ * @version 0.1
+ * @date 2019-09-06
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #include "base-lists.h"
 
 static base_EmperorListNode_t* getNode(base_EmperorList_t*, int);
@@ -6,11 +16,10 @@ static base_EmperorListNode_t* getNodeFromBack(base_EmperorList_t*, int);
 
 base_Any_t base_initEmperorList()
 {
-	base_EmperorList_t* lst = (base_EmperorList_t*)calloc(1, sizeof(base_EmperorList_t));
-
+	base_EmperorList_t* lst = (base_EmperorList_t*)calloc((size_t)1, sizeof(base_EmperorList_t*));
 	if (lst == NULL)
 	{
-		fprintf(stderr, "Failed to allocate space for list\n");
+		UNUSED_RETURN(fprintf(stderr, "Could not allocate space for list\n"));
 		exit(EXIT_FAILURE);
 	}
 
@@ -20,17 +29,14 @@ base_Any_t base_initEmperorList()
 void base_destroyEmperorList(base_Any_t lst, void (*elementDestructor)(base_Any_t))
 {
 	base_EmperorList_t* lstV = (base_EmperorList_t*)lst.voidV;
+	base_EmperorListNode_t* next;
 
 	for (base_EmperorListNode_t* curr = lstV->first.voidV; curr != NULL; curr = curr->succ.voidV)
 	{
+		next = curr->succ.voidV;
 		elementDestructor(curr->value);
-		free(curr->prev.voidV);
-	}
-
-	if (lstV->length.intV > 1)
-	{
-		elementDestructor(lstV->last);
-		free(lstV->last.voidV);
+		free(curr);
+		curr = next;
 	}
 
 	free(lstV);
@@ -89,7 +95,7 @@ static base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx)
 {
 	if (idx > lst->length.intV || 0 > idx)
 	{
-		fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length.intV);
+		UNUSED_RETURN(fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length));
 		exit(EXIT_FAILURE);
 	}
 
@@ -201,7 +207,7 @@ base_Any_t base_prepend(base_Any_t lst, base_Any_t value)
 	base_EmperorListNode_t* newNode = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
 	if (newNode == NULL)
 	{
-		fprintf(stderr, "Failed to allocate memory while creating new list node\n");
+		UNUSED_RETURN(fprintf(stderr, "Failed to allocate space when creating list node\n"));
 		exit(EXIT_FAILURE);
 	}
 
@@ -319,8 +325,6 @@ base_Any_t base_stringToCharListL(char* str, size_t length)
 	base_EmperorList_t* lst = (base_EmperorList_t*)base_initEmperorList().voidV;
 
 	lst->length.intV = (int)length;
-
-	// TODO Fix this?
 
 	if (length > 0)
 	{
