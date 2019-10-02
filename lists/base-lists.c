@@ -240,6 +240,57 @@ base_Any_t base_unite(base_Any_t lst1, base_Any_t lst2)
 	return lst1;
 }
 
+base_Any_t base_listFromArray(base_Any_t* arr, int length)
+{
+	if (arr == NULL)
+	{
+		fprintf(stderr, "Attempted to shallow copy null list\n");
+		exit(EXIT_FAILURE);
+	}
+
+	base_EmperorList_t* lst = base_initEmperorList().voidV;
+
+	lst->length.intV = length;
+
+	if (length > 0)
+	{
+		// base_EmperorListNode_t* curr    = lstV->first.voidV;
+		base_EmperorListNode_t* prev;
+		base_EmperorListNode_t* curr = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
+		if (curr == NULL)
+		{
+			fprintf(stderr, "Failed to allocate memory when copying list from array\n");
+			exit(EXIT_FAILURE);
+		}
+		lst->first.voidV = curr;
+		curr->value      = arr[0];
+		prev             = curr;
+		// memcpy(curr, curr, sizeof(base_EmperorListNode_t));
+
+		for (int i = 1; i < length; i++)
+		{
+			// Allocate space for new node
+			curr = (base_EmperorListNode_t*)malloc(sizeof(base_EmperorListNode_t));
+			if (curr == NULL)
+			{
+				fprintf(stderr, "Failed to allocate memory when shallow copying list\n");
+				exit(EXIT_FAILURE);
+			}
+
+			curr->value                                             = arr[i];
+			curr->prev.voidV                                        = prev;
+			((base_EmperorListNode_t*)curr->prev.voidV)->succ.voidV = curr;
+
+			prev = curr;
+		}
+
+		curr->succ.voidV = NULL;
+		lst->last.voidV  = curr;
+	}
+
+	return (base_Any_t){ .voidV = lst };
+}
+
 base_Any_t base_stringToCharList(char* str) { return base_stringToCharListL(str, strlen(str)); }
 
 base_Any_t base_stringToCharListL(char* str, size_t length)
