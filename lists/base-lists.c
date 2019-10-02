@@ -291,6 +291,27 @@ base_Any_t base_listFromArray(base_Any_t* arr, int length)
 	return (base_Any_t){ .voidV = lst };
 }
 
+base_Any_t* base_arrayFromList(base_Any_t lst)
+{
+	base_EmperorList_t* lstV = lst.voidV;
+	base_Any_t* arr          = (base_Any_t*)malloc(lstV->length.intV * sizeof(base_Any_t));
+	if (arr == NULL)
+	{
+		fprintf(stderr, "Failed to allocate space while converting list to array\n");
+		exit(EXIT_FAILURE);
+	}
+
+	base_EmperorListNode_t* curr = lstV->first.voidV;
+	int i                        = 0;
+	while (curr != NULL)
+	{
+		arr[i] = curr->value;
+		curr   = curr->succ.voidV;
+	}
+
+	return arr;
+}
+
 base_Any_t base_stringToCharList(char* str) { return base_stringToCharListL(str, strlen(str)); }
 
 base_Any_t base_stringToCharListL(char* str, size_t length)

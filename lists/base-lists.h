@@ -33,6 +33,7 @@ base_Any_t base_prepend(base_Any_t, base_Any_t);
 base_Any_t base_unite(base_Any_t, base_Any_t);
 
 base_Any_t base_listFromArray(base_Any_t*, int);
+base_Any_t* base_arrayFromList(base_Any_t);
 
 base_Any_t base_stringToCharList(char* str);
 base_Any_t base_stringToCharListL(char* str, size_t length);
