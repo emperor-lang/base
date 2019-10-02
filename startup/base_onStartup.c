@@ -21,7 +21,13 @@ void base_initEmperor(void)
 	}
 
 	base_registerSignals();
-	atexit(base_exitEmperor);
+	int atExitResult = atexit(base_exitEmperor);
+
+	if (atExitResult != 0)
+	{
+		fprintf(stderr, "Failed to register function on emperor exit: atexit returned %d\n", atExitResult);
+		exit(EXIT_FAILURE);
+	}
 
 	g_startupComplete = true;
 }
