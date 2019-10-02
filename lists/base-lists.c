@@ -118,7 +118,7 @@ static base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx)
 {
 	if (idx > lst->length.intV || 0 > idx)
 	{
-		UNUSED_RETURN(fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length));
+		UNUSED_RETURN(fprintf(stderr, "Could not access item %d from a list of length %d\n", idx, lst->length.intV));
 		exit(EXIT_FAILURE);
 	}
 
