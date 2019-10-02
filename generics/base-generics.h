@@ -11,7 +11,7 @@
  * @copyright Copyright (c) 2019
  *
  */
-
+#include "../unused/base-unused.h"
 #include <stdbool.h>
 
 /**
@@ -40,5 +40,7 @@ typedef struct base_any
 	 */
 	void* voidV;
 } base_Any_t;
+
+void base_noDestroy(base_Any_t _);
 
 #endif /* BASE_GENERICS_H_ */
