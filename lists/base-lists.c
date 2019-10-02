@@ -10,9 +10,32 @@
  */
 #include "base-lists.h"
 
-static base_EmperorListNode_t* getNode(base_EmperorList_t*, int);
-static base_EmperorListNode_t* getNodeFromFront(base_EmperorList_t*, int);
-static base_EmperorListNode_t* getNodeFromBack(base_EmperorList_t*, int);
+/**
+ * @brief Get the node in a list at a given position
+ *
+ * @param lst The list to search
+ * @param idx The index of the node
+ * @return base_EmperorListNode_t* A pointer to the node
+ */
+static base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx);
+
+/**
+ * @brief Get the node in a specified position, searching from the front of the list
+ *
+ * @param lst The list to search
+ * @param idx The index of the node
+ * @return base_EmperorListNode_t* A pointer to the node
+ */
+static base_EmperorListNode_t* getNodeFromFront(base_EmperorList_t* lst, int idx);
+
+/**
+ * @brief Get the node in a specified position, searching from the back of the list
+ *
+ * @param lst The list to search
+ * @param idx The index of the node
+ * @return base_EmperorListNode_t* A pointer to the node
+ */
+static base_EmperorListNode_t* getNodeFromBack(base_EmperorList_t* lst, int idx);
 
 base_Any_t base_initEmperorList()
 {

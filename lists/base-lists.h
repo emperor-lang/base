@@ -87,33 +87,6 @@ bool base_isEmpty(base_Any_t lst);
 base_Any_t base_get(base_Any_t lst, base_Any_t idx);
 
 /**
- * @brief Get the node in a list at a given position
- *
- * @param lst The list to search
- * @param idx The index of the node
- * @return base_EmperorListNode_t* A pointer to the node
- */
-base_EmperorListNode_t* getNode(base_EmperorList_t* lst, int idx);
-
-/**
- * @brief Get the node in a specified position, searching from the front of the list
- *
- * @param lst The list to search
- * @param idx The index of the node
- * @return base_EmperorListNode_t* A pointer to the node
- */
-base_EmperorListNode_t* getFromFront(base_EmperorList_t* lst, int idx);
-
-/**
- * @brief Get the node in a specified position, searching from the back of the list
- *
- * @param lst The list to search
- * @param idx The index of the node
- * @return base_EmperorListNode_t* A pointer to the node
- */
-base_EmperorListNode_t* getFromBack(base_EmperorList_t* lst, int idx);
-
-/**
  * @brief Remove an element from a list
  *
  * Note: this does not free the memory used by that element!
