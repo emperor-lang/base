@@ -22,16 +22,20 @@ typedef struct base_emperorList
 	base_Any_t last;
 } base_EmperorList_t;
 
-base_Any_t base_initEmperorList(const base_ReferenceContext_t* ctx);
+base_Any_t base_initEmperorList();
 void base_destroyEmperorList(base_Any_t, void (*)(base_Any_t));
+base_Any_t base_shallowCopyList(base_Any_t);
 bool base_isEmpty(base_Any_t lst);
-base_Any_t base_del(base_Any_t, int, const base_ReferenceContext_t*);
-base_Any_t base_get(base_Any_t, int);
+base_Any_t base_del(base_Any_t, base_Any_t, void (*)(base_Any_t));
+base_Any_t base_get(base_Any_t, base_Any_t);
 base_Any_t base_append(base_Any_t, base_Any_t);
 base_Any_t base_prepend(base_Any_t, base_Any_t);
-base_Any_t base_unite(base_Any_t, base_Any_t, const base_ReferenceContext_t*);
+base_Any_t base_unite(base_Any_t, base_Any_t);
 
-base_Any_t base_stringToCharList(char* str, const base_ReferenceContext_t* ctx);
+base_Any_t base_listFromArray(base_Any_t*, int);
+base_Any_t* base_arrayFromList(base_Any_t);
+
+base_Any_t base_stringToCharList(char* str);
 base_Any_t base_stringToCharListL(char* str, size_t length);
 char* base_charListToString(base_Any_t);
 
