@@ -46,7 +46,7 @@ base_Any_t base_initEmperorList()
 		exit(EXIT_FAILURE);
 	}
 
-	return (base_Any_t){ .voidV = lst };
+	return (base_Any_t) { .voidV = lst };
 }
 
 void base_destroyEmperorList(base_Any_t lst, void (*elementDestructor)(base_Any_t))
@@ -110,7 +110,7 @@ base_Any_t base_shallowCopyList(base_Any_t lst)
 		toReturn->last.voidV = newCurr;
 	}
 
-	return (base_Any_t){ .voidV = toReturn };
+	return (base_Any_t) { .voidV = toReturn };
 }
 
 // Precondition: lst != NULL
@@ -317,7 +317,7 @@ base_Any_t base_listFromArray(base_Any_t* arr, int length)
 		lst->last.voidV  = curr;
 	}
 
-	return (base_Any_t){ .voidV = lst };
+	return (base_Any_t) { .voidV = lst };
 }
 
 base_Any_t* base_arrayFromList(base_Any_t lst)
@@ -388,7 +388,7 @@ base_Any_t base_stringToCharListL(char* str, size_t length)
 		lst->last.voidV  = curr;
 	}
 
-	return (base_Any_t){ .voidV = lst };
+	return (base_Any_t) { .voidV = lst };
 }
 
 char* base_charListToString(base_Any_t lst)

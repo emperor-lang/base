@@ -17,9 +17,9 @@
 #include <stdbool.h>
 
 /**
- * @brief Prepare for the execution of emperor code. This should be the first 
+ * @brief Prepare for the execution of emperor code. This should be the first
  * 		  call in the `main` function of an emperor program.
- * 
+ *
  */
 void base_initEmperor(void);
 

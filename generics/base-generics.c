@@ -4,9 +4,9 @@
  * @brief Generic value handler functions
  * @version 0.1
  * @date 2019-09-06
- * 
+ *
  * @copyright Copyright (c) 2019
- * 
+ *
  */
 #include "base-generics.h"
 
