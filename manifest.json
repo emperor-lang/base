@@ -18,7 +18,10 @@
 		"banned/base-banned.h",
 		"generics/base-generics.h",
 		"base.h",
-		"lists/base-lists.h"
+		"lists/base-lists.h",
+		"signal-handler/base-signal-handler.h",
+		"startup/base_onExit.h",
+		"startup/base_onStartup.h"
 	],
 	"license": "GPL-3"
 }
