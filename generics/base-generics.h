@@ -12,7 +12,6 @@
  *
  */
 #include "../unused/base-unused.h"
-#include <stdbool.h>
 
 /**
  * @brief Holds a single emperor value so it may be reasoned about in a generic way
@@ -27,10 +26,6 @@ typedef struct base_any
 	 * @brief A character value
 	 */
 	char charV;
-	/**
-	 * @brief A boolean value
-	 */
-	bool boolV;
 	/**
 	 * @brief A real value
 	 */
