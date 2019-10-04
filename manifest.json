@@ -18,8 +18,7 @@
 		"banned/base-banned.h",
 		"generics/base-generics.h",
 		"base.h",
-		"lists/base-lists.h",
-		"references/base-references.h"
+		"lists/base-lists.h"
 	],
 	"license": "GPL-3"
 }
